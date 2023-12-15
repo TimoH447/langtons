@@ -138,6 +138,10 @@ class Game:
     def __init__(self):
         self.grid = Grid()
         self.ant = Ant(Position(0,0),Orientation("up"))
+    
+    def reset(self):
+        self.grid = Grid()
+        self.ant = Ant(Position(0,0),Orientation("up"))
 
     def next_turn(self):
         color = self.grid.get_color(self.ant.pos)

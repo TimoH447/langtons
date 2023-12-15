@@ -1,0 +1,13 @@
+<div id="game_board">
+    {{board|safe|escape}}
+</div>
+
+<form method="post" action="{% url 'index' %}">
+    {% csrf_token %}
+    
+    <!-- Button 1 -->
+    <button type="submit" name="button1" value="Button 1">Button 1</button>
+
+    <!-- Button 2 -->
+    <button type="submit" name="button2" value="Button 2">Button 2</button>
+</form>
