@@ -15,18 +15,16 @@
 
 <body>
 <div id="game_container">
-<h1 id="title">Rätsel</h1>
+<h1 id="title">Langtons</h1>
 <div id="board_container">
-	 <canvas id="myCanvas" width="400" height="400" >
+	 <canvas id="myCanvas" width="200" height="200" >
 	</canvas> 
 </div>
 <div id="game_control" style="padding: 10px">
-<form method="get" action="">
     <!-- Button 1 -->
-    <button type="submit" name="button1" value="Button 1">Next Turn</button>
+    <button id="update_state_btn">Next Turn</button>
     <!-- Button 2 -->
-    <button type="submit" name="button2" value="Button 2">Reset</button>
-</form>
+    <button id="reset_state_btn">Reset</button>
 </div>
 </div>
 <div id="explanation">
