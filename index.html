@@ -14,20 +14,24 @@
 </head>
 
 <body>
-<div id="game_container">
-<h1 id="title">Langtons</h1>
-<div id="board_container">
-	 <canvas id="myCanvas" width="200" height="200" >
-	</canvas> 
+<div id="game_container" style="display: flex, flex-direction: column">
+    <h1 id="title">Langtons Ant</h1>
+    <div id="board_container">
+         <canvas id="myCanvas" width="200" height="200" >
+        </canvas> 
+    </div>
+    <div id="game_control" style="padding: 10px; display: flex">
+        <!-- Button 1 -->
+        <div id="step_count" style="padding-right: 10px"> Step 0 </div>
+        <button id="update_state_btn" style="padding-right: 5px">Next Turn</button>
+        <!-- Button 2 -->
+        <button id="reset_state_btn">Reset</button>
+    </div>
+
+    <div id="explanation">
+        Question: How many tiles in the grid will be colored black after 1000000000000 steps?
+    </div>
 </div>
-<div id="game_control" style="padding: 10px">
-    <!-- Button 1 -->
-    <button id="update_state_btn">Next Turn</button>
-    <!-- Button 2 -->
-    <button id="reset_state_btn">Reset</button>
-</div>
-</div>
-<div id="explanation">
-</div>
+
 <script src="canvas.js"></script>
 </body>

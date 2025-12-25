@@ -6,6 +6,8 @@ var canvas_width = canvas.width;
 var canvas_height = canvas.height;
 context.clearRect(0,0,canvas_width,canvas_height);
 
+
+let step = 0;
 var grid_state = [];
 var ant_state = {
     "position": [0,0],
@@ -18,6 +20,7 @@ document.getElementById("update_state_btn").addEventListener("click", () => {
 draw_grid(line_width, cell_width);
     grid_state = update_state(grid_state,ant_state);
     update_canvas(grid_state,ant_state);
+    document.getElementById("step_count").innerHTML = `Step ${step}`;
 
   });
 
@@ -26,7 +29,9 @@ document.getElementById("reset_state_btn").addEventListener("click", () => {
     ant_state["position"][0]=0;
     ant_state["position"][1]=0;
     ant_state["orientation"] = "north";
+    step = 0;
     update_canvas(grid_state,ant_state);
+    document.getElementById("step_count").innerHTML = `Step ${step}`;
 });
 
 
@@ -146,6 +151,7 @@ function update_state(grid_state, player_state) {
     let player_pos_x = player_state["position"][0];
     let player_pos_y = player_state["position"][1];
     let player_orientation = player_state["orientation"];
+    step += 1;
 
     if (is_in_grid(grid_state, player_state["position"])) {
         grid_state = grid_state.filter(
