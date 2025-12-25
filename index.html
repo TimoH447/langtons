@@ -14,7 +14,9 @@
 </head>
 
 <body>
-<div id="game_container" style="display: flex, flex-direction: column">
+<div id="game_container" 
+    style="display: flex; flex-direction: column;
+    align-items: center; border: 2px solid black; ">
     <h1 id="title">Langtons Ant</h1>
     <div id="board_container">
          <canvas id="myCanvas" width="200" height="200" >
@@ -28,8 +30,8 @@
         <button id="reset_state_btn">Reset</button>
     </div>
 
-    <div id="explanation">
-        Question: How many tiles in the grid will be colored black after 1000000000000 steps?
+    <div id="explanation" style="padding: 10px">
+        Question: Can you find out how many tiles in an infinite grid will be colored black after 1000000000000 steps?
     </div>
 </div>
 
