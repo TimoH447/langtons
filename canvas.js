@@ -11,14 +11,23 @@ var ant_state = {
     "position": [0,0],
     "orientation": "north"
 };
-draw_grid(line_width, cell_width);
+update_canvas(grid_state, ant_state);
+
 
 document.getElementById("update_state_btn").addEventListener("click", () => {
-    console.log("Event button");
+draw_grid(line_width, cell_width);
     grid_state = update_state(grid_state,ant_state);
-    update_canvas(grid_state);
+    update_canvas(grid_state,ant_state);
 
   });
+
+document.getElementById("reset_state_btn").addEventListener("click", () => {
+    grid_state = [];
+    ant_state["position"][0]=0;
+    ant_state["position"][1]=0;
+    ant_state["orientation"] = "north";
+    update_canvas(grid_state,ant_state);
+});
 
 
 
@@ -53,14 +62,14 @@ function draw_matrix(line_width, cell_width, canvas_width, canvas_height, matrix
     var y = 0;
     for (let i=0; i<matrix.length; i++) {
         var row = matrix[i];
-        y += cell_width;
         for (let j=0; j<row.length; j++) {
-            x+=cell_width;
             if (row[j]==1) {
                 context.fillStyle = "black";
                 context.fillRect(x,y,cell_width,cell_width);
             }
+            x+=cell_width;
         }
+        y += cell_width;
         x = 0;
    }
 }
@@ -158,20 +167,71 @@ function get_grid_matrix(upper_left_corner_position, matrix_size , grid_state) {
     // loop through tiles in grid and check wether it is in the matrix
     for (let i=0; i<grid_state.length; i++) {
     let grid_tile = grid_state[i];
-    if (
-        (grid_tile[0] >= upper_left_corner_position[0] && grid_tile[0]< upper_left_corner_position[0]+matrix_size[1]) && 
-        (grid_tile[1] >= upper_left_corner_position[1] && grid_tile[1] < upper_left_corner_position[1]+matrix_size[0]))
+    if (is_on_canvas(grid_tile, upper_left_corner_position,matrix_size))
         {
-        matrix[grid_tile[1] - upper_left_corner_position[1]][grid_tile[0]-upper_left_corner_position[0]] =  1;
+            matrix_ind = get_canvas_position(grid_tile, upper_left_corner_position);
+        matrix[matrix_ind[1]][matrix_ind[0]] =  1;
     }
     }
     return matrix;
     }
 
-function update_canvas(grid_state) {
-    console.log("End state");
-    console.log(grid_state);
+function is_on_canvas(pos,canv_upleft, matrix_size){
+    if (
+        (pos[0] >= canv_upleft[0] && pos[0]< canv_upleft[0]+matrix_size[1]) && 
+        (pos[1] >= canv_upleft[1] && pos[1] < canv_upleft[1]+matrix_size[0])) 
+    {
+        return true;
+    }
+    return false;
+}
+
+function get_canvas_position(pos, canvas_upleft) {
+    return [pos[0]-canvas_upleft[0],pos[1]-canvas_upleft[1]];
+}
+
+function get_orientation_triangle_points(pos, orientation, cell_width) {
+    let left_x = pos[0]*cell_width;
+    let right_x = pos[0]*cell_width+cell_width;
+    let up_y = pos[1] * cell_width;
+    let bot_y = pos[1] * cell_width +cell_width;
+    let ul_coord = [pos[0]*cell_width, pos[1]*cell_width];
+    let ur_coord = [pos[0]*cell_width+cell_width, pos[1]*cell_width];
+    let br_coord = [pos[0]*cell_width+cell_width, pos[1]*cell_width+cell_width];
+    let bl_coord = [pos[0]*cell_width, pos[1]*cell_width+cell_width];
+    
+    if (orientation=="north") {
+        return [br_coord,bl_coord,[pos[0]*cell_width + Math.floor(cell_width/2),pos[1]*cell_width]];
+    }
+    else if (orientation == "south") {
+        return [ur_coord,ul_coord,[pos[0]*cell_width + Math.floor(cell_width/2),pos[1]*cell_width+ cell_width]];
+    }
+    else if (orientation == "east") {
+        return [ul_coord, bl_coord, [right_x, Math.floor((up_y +bot_y)/2)]];
+    }
+    else if (orientation == "west") {
+        return [ur_coord, br_coord, [left_x, Math.floor((up_y+bot_y)/2)]];
+    }
+}
+
+function draw_ant(ant_state, canvas_upperleft, matrix_size, cell_width) {
+    if (is_on_canvas(ant_state["position"],canvas_upperleft, matrix_size)) {
+        canvas_pos  = get_canvas_position(ant_state["position"],canvas_upperleft, cell_width);
+        context.strokeStyle = "red";
+        ori_triangle_points = get_orientation_triangle_points(canvas_pos, ant_state["orientation"],cell_width);
+        context.moveTo(ori_triangle_points[2][0],ori_triangle_points[2][1]);
+        for (let i=0; i<3;i++) {
+            context.lineTo(ori_triangle_points[i][0],ori_triangle_points[i][1]);
+        }
+        context.stroke();
+    }
+}
+
+function update_canvas(grid_state,ant_state) {
     context.clearRect(0,0,canvas_width,canvas_height);
     draw_grid(line_width, cell_width);
-    draw_matrix(1,20,200,200, get_grid_matrix([-5,-5],[10,10],grid_state));
+    let matrix = get_grid_matrix([-4,-4],[10,10],grid_state);
+    draw_matrix(1,20,200,200, matrix);
+    draw_ant(ant_state,[-4,-4],[10,10],cell_width);
 }
+
